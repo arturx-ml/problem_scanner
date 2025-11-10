@@ -8,8 +8,9 @@ import praw
 import tweepy
 from dotenv import load_dotenv
 import pandas as pd
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
 import time
+from collections import Counter
 
 # Load environment variables
 load_dotenv()
@@ -51,7 +52,7 @@ class PolymarketDataCollector:
         print(f"{'='*60}")
         
         all_posts = []
-        cutoff_date = datetime.utcnow() - timedelta(days=days_back)
+        cutoff_date = datetime.now(timezone.utc) - timedelta(days=days_back)
         cutoff_timestamp = cutoff_date.timestamp()
         
         print(f"\n[DEBUG] Date filter: Posts after {cutoff_date.strftime('%Y-%m-%d %H:%M:%S')} UTC")
@@ -86,7 +87,7 @@ class PolymarketDataCollector:
                 # Iterate through posts
                 for post in post_generator:
                     posts_retrieved += 1
-                    post_date = datetime.fromtimestamp(post.created_utc)
+                    post_date = datetime.fromtimestamp(post.created_utc, tz=timezone.utc)
                     
                     # Log first few posts for debugging
                     if posts_retrieved <= 3:
@@ -130,14 +131,14 @@ class PolymarketDataCollector:
         
         return pd.DataFrame(all_posts)
     
-    def collect_twitter_posts(self, query='polymarket', days_back=7, max_results=5):
+    def collect_twitter_posts(self, query='polymarket', days_back=7, max_results=10):
         """
         Collect Twitter posts about Polymarket from the last week
         
         Args:
             query: Search query (default: 'polymarket')
             days_back: Number of days to look back (default: 7, max for standard API)
-            max_results: Maximum tweets to collect (default: 10, very conservative to avoid rate limits)
+            max_results: Maximum tweets to collect (default: 10, minimum allowed by Twitter API)
             
         Returns:
             DataFrame with Twitter posts
@@ -154,7 +155,7 @@ class PolymarketDataCollector:
         
         # end_time must be at least 10 seconds before request time per Twitter API requirements
         # Add buffer and round to avoid timing issues
-        end_time = datetime.utcnow() - timedelta(seconds=60)
+        end_time = datetime.now(timezone.utc) - timedelta(seconds=60)
         start_time = end_time - timedelta(days=search_days) + timedelta(seconds=60)
         
         # Ensure start_time is not too close to end_time
@@ -278,11 +279,11 @@ class PolymarketDataCollector:
             print(f"  ℹ️  Twitter API rate limits:")
             print(f"     - Standard access: 450 requests per 15 minutes")
             print(f"     - Each search counts as 1 request")
-            print(f"     - Current setting: {max_results} tweets per collection (very conservative)")
+            print(f"     - Current setting: {max_results} tweets per collection (API minimum: 10)")
             print(f"  💡 Solutions:")
             print(f"     1. Wait 15 minutes and try again")
             print(f"     2. Skip Twitter: collector.collect_all_data(skip_twitter=True)")
-            print(f"     3. Reduce max_results further (already at {max_results})")
+            print(f"     3. Check if you've hit monthly quota limit")
             print(f"     4. Run less frequently")
             if len(all_tweets) > 0:
                 print(f"\n  ✓ Partial success: Collected {len(all_tweets)} tweets before rate limit")
@@ -325,13 +326,13 @@ class PolymarketDataCollector:
         # Collect from Reddit (reduced limit to avoid rate limits)
         reddit_df = self.collect_reddit_posts(days_back=days_back, limit=100)
         
-        # Collect from Twitter (reduced to 7 days and 20 tweets to avoid rate limits)
+        # Collect from Twitter (reduced to 7 days and 10 tweets - API minimum)
         if skip_twitter:
             print("\n⚠️  Skipping Twitter collection (skip_twitter=True)")
             twitter_df = pd.DataFrame()
         else:
-            print("\n💡 Collecting only 20 tweets to minimize API usage")
-            twitter_df = self.collect_twitter_posts(days_back=min(days_back, 7), max_results=5)
+            print("\n💡 Collecting only 10 tweets (Twitter API minimum) to minimize API usage")
+            twitter_df = self.collect_twitter_posts(days_back=min(days_back, 7), max_results=10)
         
         # Combine datasets
         if not reddit_df.empty and not twitter_df.empty:

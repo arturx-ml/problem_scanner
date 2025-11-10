@@ -1,6 +1,6 @@
 ================================================================================
 POLYMARKET USER PROBLEMS ANALYSIS REPORT
-Generated: 2025-11-09 14:41:30
+Generated: 2025-11-11 01:36:58
 ================================================================================
 
 
@@ -8,9 +8,9 @@ Generated: 2025-11-09 14:41:30
 RANK #1: KYC VERIFICATION
 --------------------------------------------------------------------------------
 
-FREQUENCY: 7 mentions (100.0% of problem posts)
-AVG SENTIMENT: 0.789 (more negative = bigger problem)
-PLATFORMS: {'reddit': 7}
+FREQUENCY: 13 mentions (100.0% of problem posts)
+AVG SENTIMENT: 0.843 (more negative = bigger problem)
+PLATFORMS: {'reddit': 13}
 
 SAMPLE COMPLAINTS:
 
@@ -26,8 +26,32 @@ Im curious to know is there a solution to this issue besides 50-50? How else wou
 RANK #2: CUSTOMER SUPPORT
 --------------------------------------------------------------------------------
 
-FREQUENCY: 6 mentions (85.7% of problem posts)
-AVG SENTIMENT: 0.959 (more negative = bigger problem)
+FREQUENCY: 9 mentions (69.2% of problem posts)
+AVG SENTIMENT: 0.949 (more negative = bigger problem)
+PLATFORMS: {'reddit': 9}
+
+SAMPLE COMPLAINTS:
+
+================================================================================
+
+--------------------------------------------------------------------------------
+RANK #3: SPEED
+--------------------------------------------------------------------------------
+
+FREQUENCY: 8 mentions (61.5% of problem posts)
+AVG SENTIMENT: 0.947 (more negative = bigger problem)
+PLATFORMS: {'reddit': 8}
+
+SAMPLE COMPLAINTS:
+
+================================================================================
+
+--------------------------------------------------------------------------------
+RANK #4: UI UX
+--------------------------------------------------------------------------------
+
+FREQUENCY: 6 mentions (46.2% of problem posts)
+AVG SENTIMENT: 0.963 (more negative = bigger problem)
 PLATFORMS: {'reddit': 6}
 
 SAMPLE COMPLAINTS:
@@ -35,43 +59,13 @@ SAMPLE COMPLAINTS:
 ================================================================================
 
 --------------------------------------------------------------------------------
-RANK #3: UI UX
+RANK #5: POLYGON NETWORK
 --------------------------------------------------------------------------------
 
-FREQUENCY: 5 mentions (71.4% of problem posts)
-AVG SENTIMENT: 0.955 (more negative = bigger problem)
+FREQUENCY: 5 mentions (38.5% of problem posts)
+AVG SENTIMENT: 0.958 (more negative = bigger problem)
 PLATFORMS: {'reddit': 5}
 
 SAMPLE COMPLAINTS:
-
-================================================================================
-
---------------------------------------------------------------------------------
-RANK #4: POLYGON NETWORK
---------------------------------------------------------------------------------
-
-FREQUENCY: 4 mentions (57.1% of problem posts)
-AVG SENTIMENT: 0.948 (more negative = bigger problem)
-PLATFORMS: {'reddit': 4}
-
-SAMPLE COMPLAINTS:
-
-================================================================================
-
---------------------------------------------------------------------------------
-RANK #5: DEPOSIT
---------------------------------------------------------------------------------
-
-FREQUENCY: 4 mentions (57.1% of problem posts)
-AVG SENTIMENT: 0.677 (more negative = bigger problem)
-PLATFORMS: {'reddit': 4}
-
-SAMPLE COMPLAINTS:
-
-1. Is there a solution to polymarkets 'no contest' situation?
-
-Recently polymarket had a market on a UFC fight between Aspinal and Gane, which resulted in no contest. As per their settlement rules, everyone who traded on that market received a 50-50 split for their bet per share, which sparked a lot of outrage.
-
-Im curious to know is there a solution to this issue besides 50-50? How else would you be able to solve this issue since all the money has already been transacted and theres no way to refund users directly for the money they already have placed into the market?
 
 ================================================================================
