@@ -34,15 +34,15 @@ class PolymarketDataCollector:
             access_token_secret=os.getenv('TWITTER_ACCESS_TOKEN_SECRET')
         )
         
-    def collect_reddit_posts(self, query='polymarket', subreddits=None, days_back=30, limit=100):
+    def collect_reddit_posts(self, query='polymarket', subreddits=None, days_back=90, limit=300):
         """
-        Collect Reddit posts about Polymarket from the last month
+        Collect Reddit posts about Polymarket from the last 3 months
         
         Args:
             query: Search query (default: 'polymarket')
             subreddits: List of subreddit names to search (default: None for all)
-            days_back: Number of days to look back (default: 30)
-            limit: Maximum posts per subreddit (default: 100, reduced to avoid rate limits)
+            days_back: Number of days to look back (default: 90 = 3 months)
+            limit: Maximum posts per subreddit (default: 300 for comprehensive data collection)
             
         Returns:
             DataFrame with Reddit posts
@@ -78,11 +78,13 @@ class PolymarketDataCollector:
                 # (since everything there is about polymarket already)
                 if subreddit_name.lower() == 'polymarket':
                     print(f"  [DEBUG] Getting all posts (no search query needed), Limit: {limit}")
-                    # Combine hot and new posts for better coverage
-                    post_generator = list(subreddit.hot(limit=limit//2)) + list(subreddit.new(limit=limit//2))
+                    # Combine hot, new, and top posts for comprehensive coverage
+                    post_generator = (list(subreddit.hot(limit=limit//3)) + 
+                                    list(subreddit.new(limit=limit//3)) + 
+                                    list(subreddit.top(time_filter='month', limit=limit//3)))
                 else:
-                    print(f"  [DEBUG] Query: '{query}', Limit: {limit}, Time filter: month")
-                    post_generator = subreddit.search(query, limit=limit, sort='relevance', time_filter='month')
+                    print(f"  [DEBUG] Query: '{query}', Limit: {limit}, Time filter: year")
+                    post_generator = subreddit.search(query, limit=limit, sort='relevance', time_filter='year')
                 
                 # Iterate through posts
                 for post in post_generator:
@@ -308,12 +310,12 @@ class PolymarketDataCollector:
         
         return pd.DataFrame(all_tweets)
     
-    def collect_all_data(self, days_back=30, skip_twitter=False):
+    def collect_all_data(self, days_back=90, skip_twitter=False):
         """
         Collect data from both Reddit and Twitter
         
         Args:
-            days_back: Number of days to look back (default: 30)
+            days_back: Number of days to look back (default: 90 = 3 months)
             skip_twitter: Skip Twitter collection if True (default: False, useful if rate limited)
         
         Returns:
@@ -323,8 +325,8 @@ class PolymarketDataCollector:
         print("POLYMARKET DATA COLLECTION STARTING")
         print("="*60)
         
-        # Collect from Reddit (reduced limit to avoid rate limits)
-        reddit_df = self.collect_reddit_posts(days_back=days_back, limit=100)
+        # Collect from Reddit (expanded to 3 months and 300 posts per subreddit)
+        reddit_df = self.collect_reddit_posts(days_back=days_back, limit=300)
         
         # Collect from Twitter (reduced to 7 days and 10 tweets - API minimum)
         if skip_twitter:
@@ -366,7 +368,7 @@ class PolymarketDataCollector:
 
 if __name__ == "__main__":
     collector = PolymarketDataCollector()
-    df = collector.collect_all_data(days_back=30)
+    df = collector.collect_all_data(days_back=90)  # Collect 3 months of data
     
     if not df.empty:
         print("\nSample of collected data:")
